@@ -12,7 +12,9 @@ class UserTask {
   }
 
   async load(id) {
-    if (this.loaded) return;
+    if (this.loaded) {
+      return;
+    }
     await this.loadByUserId(id);
   }
 
@@ -76,7 +78,9 @@ class UserTask {
   }
 
   async loadByUserId(userId) {
-    if (this.loaded) return;
+    if (this.loaded) {
+      return;
+    }
     this.userId = userId;
     const rows = await db.query(
       'SELECT task_id FROM user_task WHERE user_id = ?',

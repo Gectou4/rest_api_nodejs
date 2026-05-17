@@ -12,7 +12,9 @@ class User {
   }
 
   async load(id) {
-    if (this.loaded) return;
+    if (this.loaded) {
+      return;
+    }
     this.userId = id;
     const rows = await db.query(
       'SELECT email, name FROM user WHERE user_id = ?',

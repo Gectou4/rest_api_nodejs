@@ -2,7 +2,7 @@ const request = require('supertest');
 const app = require('../src/app');
 const db = require('../src/config/db');
 
-let createdTaskIds = [];
+const createdTaskIds = [];
 
 beforeAll(async () => {
   await db.getPool();
@@ -17,7 +17,9 @@ afterAll(async () => {
 });
 
 function trackTask(id) {
-  if (id) createdTaskIds.push(id);
+  if (id) {
+    createdTaskIds.push(id);
+  }
   return id;
 }
 

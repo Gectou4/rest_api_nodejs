@@ -15,7 +15,9 @@ class Task {
   }
 
   async load(id) {
-    if (this.loaded) return;
+    if (this.loaded) {
+      return;
+    }
     this.id = id;
     const rows = await db.query(
       'SELECT status, title, description, creation_date FROM task WHERE task_id = ?',
@@ -77,7 +79,9 @@ class Task {
   }
 
   getCreationDate() {
-    if (this.creationDate) return this.creationDate;
+    if (this.creationDate) {
+      return this.creationDate;
+    }
     const now = new Date();
     return now.toISOString().slice(0, 19).replace('T', ' ');
   }

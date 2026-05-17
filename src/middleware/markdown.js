@@ -1,7 +1,6 @@
 function markdownMiddleware(req, res, next) {
   const accept = req.headers['accept'] || '';
   if (accept.includes('text/markdown')) {
-    const originalJson = res.json.bind(res);
     res.json = function (data) {
       res.set('Content-Type', 'text/markdown; charset=utf-8');
       res.send(toMarkdown(data));
