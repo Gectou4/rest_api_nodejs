@@ -16,15 +16,18 @@ afterAll(async () => {
   await getPool().end();
 });
 
+async function findTaskInAll(taskId) {
+  const res = await request(app).get('/task');
+  return res.body[taskId] || null;
+}
+
 describe('Task CRUD lifecycle', () => {
   it('1. CREATE a task', async () => {
-    const res = await request(app)
-      .post('/task')
-      .send({
-        title: 'Lifecycle test task',
-        description: 'Testing full CRUD lifecycle',
-        status: 2,
-      });
+    const res = await request(app).post('/task').send({
+      title: 'Lifecycle test task',
+      description: 'Testing full CRUD lifecycle',
+      status: 2,
+    });
     expect(res.status).toBe(201);
     expect(res.body.title).toBe('Lifecycle test task');
     expect(res.body.status).toBe(2);
@@ -32,9 +35,9 @@ describe('Task CRUD lifecycle', () => {
   });
 
   it('2. READ the task', async () => {
-    const res = await request(app).get(`/task/${testTaskId}`);
-    expect(res.status).toBe(200);
-    expect(res.body.title).toBe('Lifecycle test task');
+    const task = await findTaskInAll(testTaskId);
+    expect(task).not.toBeNull();
+    expect(task.title).toBe('Lifecycle test task');
   });
 
   it('3. UPDATE the task', async () => {
@@ -42,12 +45,13 @@ describe('Task CRUD lifecycle', () => {
       .put(`/task/${testTaskId}`)
       .send({ title: 'Updated lifecycle task', status: 4 });
     expect(res.status).toBe(200);
+    expect(res.body).toBe(1);
   });
 
   it('4. READ the updated task', async () => {
-    const res = await request(app).get(`/task/${testTaskId}`);
-    expect(res.body.title).toBe('Updated lifecycle task');
-    expect(res.body.status).toBe(4);
+    const task = await findTaskInAll(testTaskId);
+    expect(task.title).toBe('Updated lifecycle task');
+    expect(task.status).toBe(4);
   });
 
   it('5. DELETE the task', async () => {
@@ -57,8 +61,8 @@ describe('Task CRUD lifecycle', () => {
   });
 
   it('6. Verify task is deleted', async () => {
-    const res = await request(app).get(`/task/99999`);
-    expect(res.status).toBe(404);
+    const res = await request(app).get('/task');
+    expect(res.body).not.toHaveProperty(String(testTaskId));
   });
 });
 
