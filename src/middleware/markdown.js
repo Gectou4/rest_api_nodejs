@@ -1,4 +1,4 @@
-function markdownMiddleware(req, res, next) {
+export default function markdownMiddleware(req, res, next) {
   const accept = req.headers['accept'] || '';
   if (accept.includes('text/markdown')) {
     res.json = function (data) {
@@ -39,5 +39,3 @@ function toMarkdown(data, depth = 0) {
   }
   return lines.join('\n');
 }
-
-module.exports = markdownMiddleware;

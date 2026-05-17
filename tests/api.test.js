@@ -1,19 +1,19 @@
-const request = require('supertest');
-const app = require('../src/app');
-const db = require('../src/config/db');
+import request from 'supertest';
+import app from '../src/app.js';
+import { getPool, execute } from '../src/config/db.js';
 
 const createdTaskIds = [];
 
 beforeAll(async () => {
-  await db.getPool();
+  await getPool();
 });
 
 afterAll(async () => {
   for (const id of createdTaskIds) {
-    await db.execute('DELETE FROM user_task WHERE task_id = ?', [id]);
-    await db.execute('DELETE FROM task WHERE task_id = ?', [id]);
+    await execute('DELETE FROM user_task WHERE task_id = ?', [id]);
+    await execute('DELETE FROM task WHERE task_id = ?', [id]);
   }
-  await db.getPool().end();
+  await getPool().end();
 });
 
 function trackTask(id) {
@@ -78,11 +78,13 @@ describe('GET /user/:id/task', () => {
 
 describe('POST /task', () => {
   it('should create a new task with 201', async () => {
-    const res = await request(app).post('/task').send({
-      title: 'Faire le the',
-      description: 'Comme pour le cafe, mais avec du the',
-      status: 1,
-    });
+    const res = await request(app)
+      .post('/task')
+      .send({
+        title: 'Faire le the',
+        description: 'Comme pour le cafe, mais avec du the',
+        status: 1,
+      });
     expect(res.status).toBe(201);
     expect(res.body).toHaveProperty('task_id');
     expect(res.body).toHaveProperty('title', 'Faire le the');
@@ -129,7 +131,9 @@ describe('PUT /task/:id', () => {
   });
 
   it('should return 400 for non-existent task', async () => {
-    const res = await request(app).put('/task/99999').send({ title: 'Ghost task' });
+    const res = await request(app)
+      .put('/task/99999')
+      .send({ title: 'Ghost task' });
     expect(res.status).toBe(400);
   });
 
@@ -140,10 +144,11 @@ describe('PUT /task/:id', () => {
     const taskId = createRes.body.task_id;
     trackTask(taskId);
 
-    await request(app).put(`/task/${taskId}`).send({ title: 'New title only' });
+    await request(app)
+      .put(`/task/${taskId}`)
+      .send({ title: 'New title only' });
 
     const res = await request(app).get(`/task/${taskId}`);
-    // Verify the task still exists and was updated
     expect(res.status).not.toBe(404);
   });
 });
@@ -226,7 +231,9 @@ describe('Content negotiation', () => {
   });
 
   it('should return Markdown when Accept: text/markdown', async () => {
-    const res = await request(app).get('/user/1').set('Accept', 'text/markdown');
+    const res = await request(app)
+      .get('/user/1')
+      .set('Accept', 'text/markdown');
     expect(res.headers['content-type']).toContain('text/markdown');
     expect(res.text).toContain('**user_id**');
     expect(res.text).toContain('**name**');

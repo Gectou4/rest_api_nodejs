@@ -10,7 +10,7 @@ export default [
         ...globals.jest,
       },
       ecmaVersion: 2022,
-      sourceType: 'commonjs',
+      sourceType: 'module',
     },
     rules: {
       'no-unused-vars': ['error', { argsIgnorePattern: '^_|next|req|res' }],

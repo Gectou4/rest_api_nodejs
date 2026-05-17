@@ -1,28 +1,30 @@
-const request = require('supertest');
-const app = require('../src/app');
-const db = require('../src/config/db');
+import request from 'supertest';
+import app from '../src/app.js';
+import { getPool, execute } from '../src/config/db.js';
 
 let testTaskId = null;
 
 beforeAll(async () => {
-  await db.getPool();
+  await getPool();
 });
 
 afterAll(async () => {
   if (testTaskId) {
-    await db.execute('DELETE FROM user_task WHERE task_id = ?', [testTaskId]);
-    await db.execute('DELETE FROM task WHERE task_id = ?', [testTaskId]);
+    await execute('DELETE FROM user_task WHERE task_id = ?', [testTaskId]);
+    await execute('DELETE FROM task WHERE task_id = ?', [testTaskId]);
   }
-  await db.getPool().end();
+  await getPool().end();
 });
 
 describe('Task CRUD lifecycle', () => {
   it('1. CREATE a task', async () => {
-    const res = await request(app).post('/task').send({
-      title: 'Lifecycle test task',
-      description: 'Testing full CRUD lifecycle',
-      status: 2,
-    });
+    const res = await request(app)
+      .post('/task')
+      .send({
+        title: 'Lifecycle test task',
+        description: 'Testing full CRUD lifecycle',
+        status: 2,
+      });
     expect(res.status).toBe(201);
     expect(res.body.title).toBe('Lifecycle test task');
     expect(res.body.status).toBe(2);

@@ -1,4 +1,4 @@
-const User = require('../models/user');
+import User from '../models/user.js';
 
 class UserController {
   async index(req, res) {
@@ -21,4 +21,4 @@ class UserController {
   }
 }
 
-module.exports = new UserController();
+export default new UserController();

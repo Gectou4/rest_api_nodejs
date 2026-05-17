@@ -1,4 +1,4 @@
-const TaskStatus = {
+export const TaskStatus = {
   Backlog: 1,
   Todo: 2,
   InProgress: 3,
@@ -6,11 +6,11 @@ const TaskStatus = {
   Closed: 5,
 };
 
-function isValid(value) {
+export function isValid(value) {
   return Object.values(TaskStatus).includes(Number(value));
 }
 
-function fromValue(value) {
+export function fromValue(value) {
   const num = Number(value);
   if (!isValid(num)) {
     throw new Error(`Invalid TaskStatus value: ${value}`);
@@ -18,7 +18,7 @@ function fromValue(value) {
   return num;
 }
 
-function label(value) {
+export function label(value) {
   const num = Number(value);
   const reverse = {
     1: 'Backlog',
@@ -29,5 +29,3 @@ function label(value) {
   };
   return reverse[num] || 'Unknown';
 }
-
-module.exports = { TaskStatus, isValid, fromValue, label };

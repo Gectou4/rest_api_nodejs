@@ -4,8 +4,8 @@ WORKDIR /app
 
 COPY package*.json ./
 
-RUN npm install
+RUN npm ci
 
 COPY . .
 
-CMD ["npm", "test"]
+CMD ["node", "--experimental-vm-modules", "./node_modules/jest/bin/jest.js", "--forceExit"]

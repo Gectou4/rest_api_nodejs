@@ -1,7 +1,7 @@
-const db = require('../config/db');
-const Task = require('./task');
+import { query, beginTransaction } from '../config/db.js';
+import Task from './task.js';
 
-class UserTask {
+export default class UserTask {
   constructor(userId = null) {
     this.userId = userId || 0;
     this.taskList = {};
@@ -82,7 +82,7 @@ class UserTask {
       return;
     }
     this.userId = userId;
-    const rows = await db.query('SELECT task_id FROM user_task WHERE user_id = ?', [userId]);
+    const rows = await query('SELECT task_id FROM user_task WHERE user_id = ?', [userId]);
     for (const row of rows) {
       this.addTaskId(row.task_id);
     }
@@ -92,7 +92,7 @@ class UserTask {
   async save() {
     let connection;
     try {
-      connection = await db.beginTransaction();
+      connection = await beginTransaction();
       await connection.execute('DELETE FROM user_task WHERE user_id = ?', [this.userId]);
       for (const taskId of Object.keys(this.taskList)) {
         await connection.execute('INSERT INTO user_task (user_id, task_id) VALUES (?, ?)', [
@@ -115,7 +115,7 @@ class UserTask {
   async deleteUserTask(taskId) {
     let connection;
     try {
-      connection = await db.beginTransaction();
+      connection = await beginTransaction();
       await connection.execute('DELETE FROM user_task WHERE user_id = ? AND task_id = ?', [
         this.userId,
         taskId,
@@ -143,5 +143,3 @@ class UserTask {
     };
   }
 }
-
-module.exports = UserTask;
