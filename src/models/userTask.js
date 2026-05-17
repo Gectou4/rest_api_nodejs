@@ -82,10 +82,7 @@ class UserTask {
       return;
     }
     this.userId = userId;
-    const rows = await db.query(
-      'SELECT task_id FROM user_task WHERE user_id = ?',
-      [userId]
-    );
+    const rows = await db.query('SELECT task_id FROM user_task WHERE user_id = ?', [userId]);
     for (const row of rows) {
       this.addTaskId(row.task_id);
     }
@@ -98,10 +95,10 @@ class UserTask {
       connection = await db.beginTransaction();
       await connection.execute('DELETE FROM user_task WHERE user_id = ?', [this.userId]);
       for (const taskId of Object.keys(this.taskList)) {
-        await connection.execute(
-          'INSERT INTO user_task (user_id, task_id) VALUES (?, ?)',
-          [this.userId, taskId]
-        );
+        await connection.execute('INSERT INTO user_task (user_id, task_id) VALUES (?, ?)', [
+          this.userId,
+          taskId,
+        ]);
       }
       await connection.commit();
       connection.release();
@@ -119,10 +116,10 @@ class UserTask {
     let connection;
     try {
       connection = await db.beginTransaction();
-      await connection.execute(
-        'DELETE FROM user_task WHERE user_id = ? AND task_id = ?',
-        [this.userId, taskId]
-      );
+      await connection.execute('DELETE FROM user_task WHERE user_id = ? AND task_id = ?', [
+        this.userId,
+        taskId,
+      ]);
       await connection.commit();
       connection.release();
       return true;

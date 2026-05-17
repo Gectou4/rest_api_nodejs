@@ -9,7 +9,7 @@ on:
 jobs:
   lint:
     runs-on: ubuntu-latest
-    name: "Lint (ESLint)"
+    name: 'Lint (ESLint)'
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -28,7 +28,7 @@ jobs:
 
   format:
     runs-on: ubuntu-latest
-    name: "Format (Prettier)"
+    name: 'Format (Prettier)'
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -48,7 +48,7 @@ jobs:
   test:
     needs: [lint, format]
     runs-on: ubuntu-latest
-    name: "Tests (Node.js ${{ matrix.node-version }})"
+    name: 'Tests (Node.js ${{ matrix.node-version }})'
     strategy:
       matrix:
         node-version: ['18', '20', '22']
@@ -104,7 +104,7 @@ jobs:
   coverage:
     needs: [test]
     runs-on: ubuntu-latest
-    name: "Coverage Report"
+    name: 'Coverage Report'
     if: github.event_name == 'pull_request'
 
     services:
@@ -164,7 +164,7 @@ jobs:
   quality-gate:
     needs: [lint, format, test]
     runs-on: ubuntu-latest
-    name: "Quality Gate"
+    name: 'Quality Gate'
     if: always()
     steps:
       - name: Check all jobs status

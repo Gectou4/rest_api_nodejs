@@ -43,70 +43,73 @@ rest_api_nodejs/
 
 ## Stack technique
 
-| PHP | Node.js |
-|-----|---------|
-| PDO | mysql2 (pool) |
-| Routeur regex custom | Express.js Router |
-| PHPUnit | Jest + Supertest |
-| composer.json | package.json |
-| `$_SERVER`/`$_REQUEST` | `req.headers`/`req.body`/`req.params` |
-| Singleton/Multiton | Modules ES6 (import unique) |
+| PHP                    | Node.js                                   |
+| ---------------------- | ----------------------------------------- |
+| PDO                    | mysql2 (pool)                             |
+| Routeur regex custom   | Express.js Router                         |
+| PHPUnit                | Jest + Supertest                          |
+| composer.json          | package.json                              |
+| `$_SERVER`/`$_REQUEST` | `req.headers`/`req.body`/`req.params`     |
+| Singleton/Multiton     | Modules ES6 (import unique)               |
 | `$_POST`/`php://input` | `express.json()` + `express.urlencoded()` |
 
 ## Correspondance PHP → Node.js
 
 ### Models
+
 - `ModelAbstract` → classes ES6 avec méthodes async/await
 - `TaskStatus` (PHP enum) → objet JS avec constantes
 - `User`, `Task`, `UserTask` → classes avec `load()`, `save()`, `delete()`, `toArray()`
 
 ### Controllers
+
 - Méthodes `getXXXAction()` → fonctions Express `(req, res)`
 - `setCode()` → `res.status()`
 - `return $data` → `res.json(data)` ou `res.send()`
 
 ### Routes
-| PHP Route | Express Route |
-|-----------|---------------|
-| `GET /user/(\d+)` | `GET /user/:id` |
-| `GET /user/(\d+)/task` | `GET /user/:id/task` |
-| `POST\|PUT /task` | `POST /task`, `PUT /task` |
-| `POST\|PUT /task/(\d+)` | `POST /task/:id`, `PUT /task/:id` |
-| `DELETE /task/(\d+)` | `DELETE /task/:id` |
+
+| PHP Route                          | Express Route                                                       |
+| ---------------------------------- | ------------------------------------------------------------------- |
+| `GET /user/(\d+)`                  | `GET /user/:id`                                                     |
+| `GET /user/(\d+)/task`             | `GET /user/:id/task`                                                |
+| `POST\|PUT /task`                  | `POST /task`, `PUT /task`                                           |
+| `POST\|PUT /task/(\d+)`            | `POST /task/:id`, `PUT /task/:id`                                   |
+| `DELETE /task/(\d+)`               | `DELETE /task/:id`                                                  |
 | `POST\|PUT /user/(\d+)/task/(\d+)` | `POST /user/:userId/task/:taskId`, `PUT /user/:userId/task/:taskId` |
-| `DELETE /user/(\d+)/task/(\d+)` | `DELETE /user/:userId/task/:taskId` |
+| `DELETE /user/(\d+)/task/(\d+)`    | `DELETE /user/:userId/task/:taskId`                                 |
 
 ## Endpoints
 
-| Méthode | URI | Controller | Description |
-|---------|-----|------------|-------------|
-| `GET` | `/user/{id}` | User.index | Données utilisateur |
-| `GET` | `/user/{id}/task` | User.userTask | Taches d'un utilisateur |
-| `POST` | `/task` | Task.addTask | Créer une tache (201) |
-| `POST/PUT` | `/task/{id}` | Task.editTask | Modifier une tache |
-| `DELETE` | `/task/{id}` | Task.deleteTask | Supprimer une tache |
-| `POST/PUT` | `/user/{id}/task/{taskId}` | Task.addTaskToUser | Associer tache → user |
-| `DELETE` | `/user/{id}/task/{taskId}` | Task.deleteUserTask | Retirer association |
+| Méthode    | URI                        | Controller          | Description             |
+| ---------- | -------------------------- | ------------------- | ----------------------- |
+| `GET`      | `/user/{id}`               | User.index          | Données utilisateur     |
+| `GET`      | `/user/{id}/task`          | User.userTask       | Taches d'un utilisateur |
+| `POST`     | `/task`                    | Task.addTask        | Créer une tache (201)   |
+| `POST/PUT` | `/task/{id}`               | Task.editTask       | Modifier une tache      |
+| `DELETE`   | `/task/{id}`               | Task.deleteTask     | Supprimer une tache     |
+| `POST/PUT` | `/user/{id}/task/{taskId}` | Task.addTaskToUser  | Associer tache → user   |
+| `DELETE`   | `/user/{id}/task/{taskId}` | Task.deleteUserTask | Retirer association     |
 
 ## Statuts Task
 
-| Value | Label |
-|-------|-------|
-| 1 | Backlog |
-| 2 | Todo |
-| 3 | In Progress |
-| 4 | Done |
-| 5 | Closed |
+| Value | Label       |
+| ----- | ----------- |
+| 1     | Backlog     |
+| 2     | Todo        |
+| 3     | In Progress |
+| 4     | Done        |
+| 5     | Closed      |
 
 ## Codes HTTP
 
-| Code | Usage |
-|------|-------|
-| 200 | Succès (lecture, update, delete) |
-| 201 | Création de tache |
-| 400 | Paramètre invalide / ressource inexistante |
-| 404 | Utilisateur non trouvé |
-| 500 | Erreur interne |
+| Code | Usage                                      |
+| ---- | ------------------------------------------ |
+| 200  | Succès (lecture, update, delete)           |
+| 201  | Création de tache                          |
+| 400  | Paramètre invalide / ressource inexistante |
+| 404  | Utilisateur non trouvé                     |
+| 500  | Erreur interne                             |
 
 ## Configuration DB (.env)
 
@@ -121,12 +124,12 @@ PORT=3000
 
 ## Outillage
 
-| Outil | Rôle |
-|-------|------|
-| ESLint | Linting JS (flat config) |
-| Prettier | Formatage automatique |
-| Jest + Supertest | Tests unitaires et API |
-| GitHub Actions | CI/CD (lint, format, tests, coverage) |
+| Outil            | Rôle                                  |
+| ---------------- | ------------------------------------- |
+| ESLint           | Linting JS (flat config)              |
+| Prettier         | Formatage automatique                 |
+| Jest + Supertest | Tests unitaires et API                |
+| GitHub Actions   | CI/CD (lint, format, tests, coverage) |
 
 ## Commandes
 
@@ -146,6 +149,7 @@ npm run check         # lint + format:check
 ## GitHub Actions
 
 ### ci.yml
+
 - **lint** : ESLint sur Ubuntu
 - **format** : Prettier check
 - **test** : Jest sur Node 18, 20, 22 avec MySQL 8.0
@@ -153,6 +157,7 @@ npm run check         # lint + format:check
 - **quality-gate** : Vérifie que tout est vert
 
 ### auto-fix.yml
+
 - S'exécute sur PR si le repo source = repo cible
 - Applique Prettier et commit les changements
 
@@ -160,11 +165,11 @@ npm run check         # lint + format:check
 
 ### Services
 
-| Service | Image | Port | Rôle |
-|---------|-------|------|------|
-| `app` | node:20-alpine | 3000 | API Express |
-| `db` | mysql:8.0 | 3306 | Base de données |
-| `test` | node:20-alpine | - | Tests (profile: test) |
+| Service | Image          | Port | Rôle                  |
+| ------- | -------------- | ---- | --------------------- |
+| `app`   | node:20-alpine | 3000 | API Express           |
+| `db`    | mysql:8.0      | 3306 | Base de données       |
+| `test`  | node:20-alpine | -    | Tests (profile: test) |
 
 ### Commandes
 

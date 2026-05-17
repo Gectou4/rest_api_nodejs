@@ -16,10 +16,7 @@ class User {
       return;
     }
     this.userId = id;
-    const rows = await db.query(
-      'SELECT email, name FROM user WHERE user_id = ?',
-      [id]
-    );
+    const rows = await db.query('SELECT email, name FROM user WHERE user_id = ?', [id]);
     if (rows.length > 0) {
       this.name = rows[0].name;
       this.email = rows[0].email;

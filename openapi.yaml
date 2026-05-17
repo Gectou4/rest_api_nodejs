@@ -29,7 +29,6 @@ tags:
     description: Association tâches ↔ utilisateurs
 
 paths:
-
   # ─────────────────────────────────────────
   # UTILISATEURS
   # ─────────────────────────────────────────
@@ -185,9 +184,7 @@ paths:
 # ─────────────────────────────────────────
 
 components:
-
   parameters:
-
     userId:
       name: id
       in: path
@@ -219,7 +216,6 @@ components:
       example: 2
 
   schemas:
-
     User:
       type: object
       required: [user_id, name, email]
@@ -312,7 +308,6 @@ components:
       example: Task [42] not exists
 
   responses:
-
     SuccessInt:
       description: Opération réussie
       content:

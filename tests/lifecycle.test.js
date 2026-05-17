@@ -18,13 +18,11 @@ afterAll(async () => {
 
 describe('Task CRUD lifecycle', () => {
   it('1. CREATE a task', async () => {
-    const res = await request(app)
-      .post('/task')
-      .send({
-        title: 'Lifecycle test task',
-        description: 'Testing full CRUD lifecycle',
-        status: 2,
-      });
+    const res = await request(app).post('/task').send({
+      title: 'Lifecycle test task',
+      description: 'Testing full CRUD lifecycle',
+      status: 2,
+    });
     expect(res.status).toBe(201);
     expect(res.body.title).toBe('Lifecycle test task');
     expect(res.body.status).toBe(2);

@@ -6,24 +6,24 @@ Portage du projet PHP original vers Node.js.
 
 Elle gere deux types d'objets et leurs relations :
 
-| Objet  | Champs |
-|--------|--------|
-| `User` | `user_id`, `name`, `email` |
+| Objet  | Champs                                                       |
+| ------ | ------------------------------------------------------------ |
+| `User` | `user_id`, `name`, `email`                                   |
 | `Task` | `task_id`, `title`, `description`, `creation_date`, `status` |
 
 Les statuts de tache (`status`) sont des entiers : `1` Backlog - `2` Todo - `3` In Progress - `4` Done - `5` Closed.
 
 ### Endpoints
 
-| Methode | URI | Description |
-|---------|-----|-------------|
-| `GET` | `/user/{id}` | Donnees d'un utilisateur |
-| `GET` | `/user/{id}/task` | Liste des taches d'un utilisateur |
-| `POST` | `/task` | Creer une nouvelle tache |
-| `POST` / `PUT` | `/user/{id}/task/{taskId}` | Associer une tache a un utilisateur |
-| `DELETE` | `/task/{id}` | Supprimer une tache |
-| `DELETE` | `/user/{id}/task/{taskId}` | Retirer l'association tache <-> utilisateur |
-| `POST` / `PUT` | `/task/{id}` | Modifier une tache existante |
+| Methode        | URI                        | Description                                 |
+| -------------- | -------------------------- | ------------------------------------------- |
+| `GET`          | `/user/{id}`               | Donnees d'un utilisateur                    |
+| `GET`          | `/user/{id}/task`          | Liste des taches d'un utilisateur           |
+| `POST`         | `/task`                    | Creer une nouvelle tache                    |
+| `POST` / `PUT` | `/user/{id}/task/{taskId}` | Associer une tache a un utilisateur         |
+| `DELETE`       | `/task/{id}`               | Supprimer une tache                         |
+| `DELETE`       | `/user/{id}/task/{taskId}` | Retirer l'association tache <-> utilisateur |
+| `POST` / `PUT` | `/task/{id}`               | Modifier une tache existante                |
 
 ---
 
