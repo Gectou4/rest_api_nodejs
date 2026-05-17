@@ -7,6 +7,8 @@ const router = express.Router();
 router.get('/user/:id', userController.index.bind(userController));
 router.get('/user/:id/task', userController.userTask.bind(userController));
 
+router.get('/task', taskController.index.bind(taskController));
+
 router.post('/task', taskController.addTask.bind(taskController));
 router.put('/task', taskController.addTask.bind(taskController));
 
