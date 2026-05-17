@@ -1,9 +1,9 @@
-require('dotenv').config();
-const express = require('express');
-const cors = require('cors');
-const routes = require('./config/routes');
-const markdownMiddleware = require('./middleware/markdown');
-const errorHandler = require('./middleware/errorHandler');
+import 'dotenv/config';
+import express from 'express';
+import cors from 'cors';
+import routes from './config/routes.js';
+import markdownMiddleware from './middleware/markdown.js';
+import errorHandler from './middleware/errorHandler.js';
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -24,4 +24,4 @@ if (process.env.NODE_ENV !== 'test') {
   });
 }
 
-module.exports = app;
+export default app;

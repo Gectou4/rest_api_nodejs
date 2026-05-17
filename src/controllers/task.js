@@ -1,7 +1,7 @@
-const Task = require('../models/task');
-const User = require('../models/user');
-const UserTask = require('../models/userTask');
-const { TaskStatus } = require('../models/taskStatus');
+import Task from '../models/task.js';
+import User from '../models/user.js';
+import UserTask from '../models/userTask.js';
+import { TaskStatus } from '../models/taskStatus.js';
 
 class TaskController {
   async index(req, res) {
@@ -124,4 +124,4 @@ class TaskController {
   }
 }
 
-module.exports = new TaskController();
+export default new TaskController();

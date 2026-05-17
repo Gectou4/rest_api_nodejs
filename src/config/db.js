@@ -1,8 +1,8 @@
-const mysql = require('mysql2/promise');
+import mysql from 'mysql2/promise';
 
 let pool = null;
 
-function getPool() {
+export function getPool() {
   if (!pool) {
     pool = mysql.createPool({
       host: process.env.DB_HOST || 'localhost',
@@ -18,20 +18,18 @@ function getPool() {
   return pool;
 }
 
-async function query(sql, params = []) {
+export async function query(sql, params = []) {
   const [rows] = await getPool().execute(sql, params);
   return rows;
 }
 
-async function execute(sql, params = []) {
+export async function execute(sql, params = []) {
   const [result] = await getPool().execute(sql, params);
   return result;
 }
 
-async function beginTransaction() {
+export async function beginTransaction() {
   const connection = await getPool().getConnection();
   await connection.beginTransaction();
   return connection;
 }
-
-module.exports = { getPool, query, execute, beginTransaction };

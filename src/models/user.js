@@ -1,6 +1,7 @@
-const db = require('../config/db');
+import { query } from '../config/db.js';
+import UserTask from './userTask.js';
 
-class User {
+export default class User {
   constructor(id = null) {
     this.userId = null;
     this.name = '';
@@ -16,7 +17,7 @@ class User {
       return;
     }
     this.userId = id;
-    const rows = await db.query('SELECT email, name FROM user WHERE user_id = ?', [id]);
+    const rows = await query('SELECT email, name FROM user WHERE user_id = ?', [id]);
     if (rows.length > 0) {
       this.name = rows[0].name;
       this.email = rows[0].email;
@@ -51,7 +52,6 @@ class User {
   }
 
   async getTasks() {
-    const UserTask = require('./userTask');
     return UserTask.getTaskByUser(this);
   }
 
@@ -63,5 +63,3 @@ class User {
     };
   }
 }
-
-module.exports = User;

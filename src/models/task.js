@@ -1,7 +1,7 @@
-const db = require('../config/db');
-const { TaskStatus, fromValue } = require('./taskStatus');
+import { query, execute } from '../config/db.js';
+import { TaskStatus, fromValue } from './taskStatus.js';
 
-class Task {
+export default class Task {
   constructor(id = null) {
     this.id = 0;
     this.title = '';
@@ -19,7 +19,7 @@ class Task {
       return;
     }
     this.id = id;
-    const rows = await db.query(
+    const rows = await query(
       'SELECT status, title, description, creation_date FROM task WHERE task_id = ?',
       [id]
     );
@@ -89,7 +89,7 @@ class Task {
   async save() {
     try {
       if (this.id <= 0) {
-        const result = await db.execute(
+        const result = await execute(
           'INSERT INTO task (status, title, description, creation_date) VALUES (?, ?, ?, ?)',
           [this.status, this.title, this.description, this.getCreationDate()]
         );
@@ -97,7 +97,7 @@ class Task {
         this.loaded = true;
         return true;
       } else {
-        await db.execute(
+        await execute(
           'UPDATE task SET status=?, title=?, description=?, creation_date=? WHERE task_id = ?',
           [this.status, this.title, this.description, this.getCreationDate(), this.id]
         );
@@ -110,7 +110,7 @@ class Task {
 
   async delete() {
     try {
-      await db.execute('DELETE FROM task WHERE task_id = ?', [this.id]);
+      await execute('DELETE FROM task WHERE task_id = ?', [this.id]);
       return true;
     } catch {
       return false;
@@ -129,7 +129,7 @@ class Task {
         sql += ' OFFSET ?';
         params.push(offset);
       }
-      const rows = await db.query(sql, params);
+      const rows = await query(sql, params);
       const taskList = {};
       for (const row of rows) {
         taskList[row.task_id] = {
@@ -156,5 +156,3 @@ class Task {
     };
   }
 }
-
-module.exports = Task;

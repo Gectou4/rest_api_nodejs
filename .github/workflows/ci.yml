@@ -46,7 +46,6 @@ jobs:
         run: npm run format:check
 
   test:
-    needs: [lint, format]
     runs-on: ubuntu-latest
     name: 'Tests (Node.js ${{ matrix.node-version }})'
     strategy:

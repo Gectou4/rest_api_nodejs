@@ -1,4 +1,4 @@
-const { TaskStatus, isValid, fromValue, label } = require('../src/models/taskStatus');
+import { TaskStatus, isValid, fromValue, label } from '../src/models/taskStatus.js';
 
 describe('TaskStatus', () => {
   describe('constants', () => {

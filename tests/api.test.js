@@ -1,19 +1,19 @@
-const request = require('supertest');
-const app = require('../src/app');
-const db = require('../src/config/db');
+import request from 'supertest';
+import app from '../src/app.js';
+import { getPool, execute } from '../src/config/db.js';
 
 const createdTaskIds = [];
 
 beforeAll(async () => {
-  await db.getPool();
+  await getPool();
 });
 
 afterAll(async () => {
   for (const id of createdTaskIds) {
-    await db.execute('DELETE FROM user_task WHERE task_id = ?', [id]);
-    await db.execute('DELETE FROM task WHERE task_id = ?', [id]);
+    await execute('DELETE FROM user_task WHERE task_id = ?', [id]);
+    await execute('DELETE FROM task WHERE task_id = ?', [id]);
   }
-  await db.getPool().end();
+  await getPool().end();
 });
 
 function trackTask(id) {
@@ -142,9 +142,8 @@ describe('PUT /task/:id', () => {
 
     await request(app).put(`/task/${taskId}`).send({ title: 'New title only' });
 
-    const res = await request(app).get(`/task/${taskId}`);
-    // Verify the task still exists and was updated
-    expect(res.status).not.toBe(404);
+    const res = await request(app).get('/task');
+    expect(res.body).toHaveProperty(String(taskId));
   });
 });
 

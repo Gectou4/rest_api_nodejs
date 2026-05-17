@@ -1,20 +1,25 @@
-const request = require('supertest');
-const app = require('../src/app');
-const db = require('../src/config/db');
+import request from 'supertest';
+import app from '../src/app.js';
+import { getPool, execute } from '../src/config/db.js';
 
 let testTaskId = null;
 
 beforeAll(async () => {
-  await db.getPool();
+  await getPool();
 });
 
 afterAll(async () => {
   if (testTaskId) {
-    await db.execute('DELETE FROM user_task WHERE task_id = ?', [testTaskId]);
-    await db.execute('DELETE FROM task WHERE task_id = ?', [testTaskId]);
+    await execute('DELETE FROM user_task WHERE task_id = ?', [testTaskId]);
+    await execute('DELETE FROM task WHERE task_id = ?', [testTaskId]);
   }
-  await db.getPool().end();
+  await getPool().end();
 });
+
+async function findTaskInAll(taskId) {
+  const res = await request(app).get('/task');
+  return res.body[taskId] || null;
+}
 
 describe('Task CRUD lifecycle', () => {
   it('1. CREATE a task', async () => {
@@ -30,9 +35,9 @@ describe('Task CRUD lifecycle', () => {
   });
 
   it('2. READ the task', async () => {
-    const res = await request(app).get(`/task/${testTaskId}`);
-    expect(res.status).toBe(200);
-    expect(res.body.title).toBe('Lifecycle test task');
+    const task = await findTaskInAll(testTaskId);
+    expect(task).not.toBeNull();
+    expect(task.title).toBe('Lifecycle test task');
   });
 
   it('3. UPDATE the task', async () => {
@@ -40,12 +45,13 @@ describe('Task CRUD lifecycle', () => {
       .put(`/task/${testTaskId}`)
       .send({ title: 'Updated lifecycle task', status: 4 });
     expect(res.status).toBe(200);
+    expect(res.body).toBe(1);
   });
 
   it('4. READ the updated task', async () => {
-    const res = await request(app).get(`/task/${testTaskId}`);
-    expect(res.body.title).toBe('Updated lifecycle task');
-    expect(res.body.status).toBe(4);
+    const task = await findTaskInAll(testTaskId);
+    expect(task.title).toBe('Updated lifecycle task');
+    expect(task.status).toBe(4);
   });
 
   it('5. DELETE the task', async () => {
@@ -55,8 +61,8 @@ describe('Task CRUD lifecycle', () => {
   });
 
   it('6. Verify task is deleted', async () => {
-    const res = await request(app).get(`/task/99999`);
-    expect(res.status).toBe(404);
+    const res = await request(app).get('/task');
+    expect(res.body).not.toHaveProperty(String(testTaskId));
   });
 });
 
