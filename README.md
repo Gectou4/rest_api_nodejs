@@ -30,16 +30,16 @@ Les statuts de tâche (`status`) sont des entiers : `1` Backlog - `2` Todo - `3`
 
 ### Endpoints
 
-| Méthode        | URI                        | Description                                 |
-| -------------- | -------------------------- | ------------------------------------------- |
-| `GET`          | `/task`                    | Liste de toutes les tâches                  |
-| `GET`          | `/user/{id}`               | Données d'un utilisateur                    |
-| `GET`          | `/user/{id}/task`          | Liste des tâches d'un utilisateur           |
-| `POST`         | `/task`                    | Créer une nouvelle tâche                    |
-| `POST` / `PUT` | `/user/{id}/task/{taskId}` | Associer une tâche à un utilisateur         |
-| `DELETE`       | `/task/{id}`               | Supprimer une tâche                         |
-| `DELETE`       | `/user/{id}/task/{taskId}` | Retirer l'association tâche-utilisateur     |
-| `POST` / `PUT` | `/task/{id}`               | Modifier une tâche existante                |
+| Méthode        | URI                        | Description                             |
+| -------------- | -------------------------- | --------------------------------------- |
+| `GET`          | `/task`                    | Liste de toutes les tâches              |
+| `GET`          | `/user/{id}`               | Données d'un utilisateur                |
+| `GET`          | `/user/{id}/task`          | Liste des tâches d'un utilisateur       |
+| `POST`         | `/task`                    | Créer une nouvelle tâche                |
+| `POST` / `PUT` | `/user/{id}/task/{taskId}` | Associer une tâche à un utilisateur     |
+| `DELETE`       | `/task/{id}`               | Supprimer une tâche                     |
+| `DELETE`       | `/user/{id}/task/{taskId}` | Retirer l'association tâche-utilisateur |
+| `POST` / `PUT` | `/task/{id}`               | Modifier une tâche existante            |
 
 ---
 
