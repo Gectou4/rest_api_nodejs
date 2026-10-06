@@ -5,6 +5,7 @@ export default class UserTask {
   constructor(userId = null) {
     this.userId = userId || 0;
     this.taskList = {};
+    this.persistedIds = new Set();
     this.loaded = false;
     if (userId) {
       this.load(userId);
@@ -85,23 +86,37 @@ export default class UserTask {
     const rows = await query('SELECT task_id FROM user_task WHERE user_id = ?', [userId]);
     for (const row of rows) {
       this.addTaskId(row.task_id);
+      this.persistedIds.add(String(row.task_id));
     }
     this.loaded = true;
   }
 
+  /**
+   * Persist only the difference with what was loaded, so that concurrent
+   * requests on the same user do not overwrite each other's associations.
+   */
   async save() {
+    const current = new Set(Object.keys(this.taskList));
+    const toAdd = [...current].filter((id) => !this.persistedIds.has(id));
+    const toRemove = [...this.persistedIds].filter((id) => !current.has(id));
     let connection;
     try {
       connection = await beginTransaction();
-      await connection.execute('DELETE FROM user_task WHERE user_id = ?', [this.userId]);
-      for (const taskId of Object.keys(this.taskList)) {
-        await connection.execute('INSERT INTO user_task (user_id, task_id) VALUES (?, ?)', [
+      for (const taskId of toAdd) {
+        await connection.execute('INSERT IGNORE INTO user_task (user_id, task_id) VALUES (?, ?)', [
+          this.userId,
+          taskId,
+        ]);
+      }
+      for (const taskId of toRemove) {
+        await connection.execute('DELETE FROM user_task WHERE user_id = ? AND task_id = ?', [
           this.userId,
           taskId,
         ]);
       }
       await connection.commit();
       connection.release();
+      this.persistedIds = current;
       return true;
     } catch (err) {
       if (connection) {
